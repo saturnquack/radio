@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbyLKekf2ir_Pu0XNlXkgI8X5cVw0WcPh5RyTk6GPT96JewPnrzGYN8Y3XZJ1bbnjQg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzxU9PD3dz9mMvSH13-kptB_ubknWtLFzS-H1chYXL6cQdaKQxE4RWzkzUNQGOQO7UI/exec";
 
 function addData() {
     const freq = document.getElementById('freq').value;
