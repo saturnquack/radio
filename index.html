@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Form</title>
+    <title>SRFD</title>
 </head>
 <body>
     <h1>Submit Data</h1>
@@ -38,7 +38,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbymmqEOv6dmCLyq5KFv7By4DoDaI5exd7N0DcWI2FwCSuTTj3EUKsFjldUNo1XPmwgW/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxAyXPokNLaPpJQc5l0bxnknp2UrvhnBMbuN_FOmD-Rpj2iG7d2dZI_lqsE9DpEfzla/exec";
 
         // Function to add data to Google Sheets
         function addData() {
@@ -48,12 +48,11 @@
             const category = document.getElementById('category').value;
 
             if (name && mode && category && freq) {
-                fetch(API_URL, {
+                fetch(API_URL + "?action=submitData&name=" + name + "&mode=" + mode + "&category=" + category + "&freq=" + freq, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ name, mode, category, freq }),
                 })
                 .then(response => response.text())
                 .then(result => {
