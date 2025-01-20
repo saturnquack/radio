@@ -47,63 +47,42 @@
 </table>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbw2yRv2qFRwORIAPhqyDhsUZWDQHvXUyZiut8bwcnUO4Cf-wAUgzDycRWg866efM_8m/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbz55uZy7AWUTp5qXs3rj2h_7AmNvgsb1ENklBwrKoPYGoFkTBxBlvDUdrZ9XpPfaPdC/exec";
 
-    function addData() {
-        const freq = document.getElementById('freq').value;
-        const name = document.getElementById('name').value;
-        const mode = document.getElementById('mode').value;
-        const category = document.getElementById('category').value; //dropdown
+function addData() {
+    const freq = document.getElementById('freq').value;
+    const name = document.getElementById('name').value;
+    const mode = document.getElementById('mode').value;
+    const category = document.getElementById('category').value; // dropdown
 
-        if (name && mode && category && freq) {
-            fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ name, mode, category, freq }), // Send all fields
-            })
-            .then(response => response.text())
-            .then(result => {
-                console.log(result); // Log the response for debugging
-                if (result === "Success") {
-                    alert('Sent!');
-                    document.getElementById('data-form').reset();
-                    loadData(); // Reload the data after successful submission
-                } else {
-                    alert('Error: ' + result); // Display the error message from the script
-                }
-            })
-            .catch(err => {
-                console.error('Fetch error:', err);
-                alert('Failed to send data. Please check the console for details.');
-            });
-        } else {
-            alert('Please fill in all fields.');
-        }
-    }
-
-    // Function to load data from the Google Sheet
-    function loadData() {
-        fetch(API_URL + "?action=getData")
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = ""; // Clear existing table rows
-
-            data.forEach(row => {
-                const newRow = tableBody.insertRow();
-                newRow.insertCell(0).textContent = row.name;
-                newRow.insertCell(1).textContent = row.mode;
-                newRow.insertCell(2).textContent = row.category;
-                newRow.insertCell(3).textContent = row.freq;
-            });
+    if (name && mode && category && freq) {
+        fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, mode, category, freq }),
         })
-        .catch(err => console.error('Error loading data:', err));
+        .then(response => response.text())
+        .then(result => {
+            console.log(result); // Log the response for debugging
+            if (result === "Success") {
+                alert('Data sent successfully!');
+                document.getElementById('data-form').reset();
+                loadData();
+            } else {
+                alert('Error: ' + result);
+            }
+        })
+        .catch(err => {
+            console.error('Fetch error:', err);
+            alert('Failed to send data.');
+        });
+    } else {
+        alert('All fields are required.');
     }
+}
 
-    // Load data when the page is loaded
-    window.onload = loadData;
 </script>
 
 </body>
