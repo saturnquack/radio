@@ -1,8 +1,10 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbyLKekf2ir_Pu0XNlXkgI8X5cVw0WcPh5RyTk6GPT96JewPnrzGYN8Y3XZJ1bbnjQg/exec";
 
 function addData() {
+    const freq = document.getElementById('freq').value;
     const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
+    const mode = document.getElementById('mode').value;
+    const category = document.getElementById('category').value; //dropdown
 
     if (name && email) {
         fetch(API_URL, {
@@ -16,18 +18,18 @@ function addData() {
         .then(result => {
             console.log(result); // Log the response for debugging
             if (result === "Success") {
-                alert('Data saved!');
+                alert('sent!');
                 document.getElementById('data-form').reset();
                 loadData();
             } else {
-                alert('Error: ' + result);
+                alert('error: ' + result);
             }
         })
         .catch(err => {
-            console.error('Fetch error:', err);
-            alert('Failed to send data.');
+            console.error('fetch error:', err);
+            alert('failed to send data.');
         });
     } else {
-        alert('Please fill in all fields.');
+        alert('this is an error');
     }
 }
