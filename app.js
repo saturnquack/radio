@@ -1,4 +1,4 @@
-const API_URL = "YOUR_DEPLOYMENT_URL_HERE";
+const API_URL = "https://script.google.com/macros/s/AKfycbzfJTmSxEAN0gMxplnEvGjpXZ5P-lMef1zBxIlSScKw8wTggoTsAJxOyxuf6RpA5T-v/exec";
 
 function addData() {
     const name = document.getElementById('name').value;
