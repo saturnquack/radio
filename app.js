@@ -1,32 +1,42 @@
-// app.js
+const API_URL = "YOUR_DEPLOYMENT_URL_HERE";
 
 function addData() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
 
     if (name && email) {
-        // Get the table body
-        const tableBody = document.getElementById('data-table').querySelector('tbody');
-
-        // Create a new row
-        const newRow = document.createElement('tr');
-
-        // Create and append name cell
-        const nameCell = document.createElement('td');
-        nameCell.textContent = name;
-        newRow.appendChild(nameCell);
-
-        // Create and append email cell
-        const emailCell = document.createElement('td');
-        emailCell.textContent = email;
-        newRow.appendChild(emailCell);
-
-        // Append the new row to the table
-        tableBody.appendChild(newRow);
-
-        // Clear the form
-        document.getElementById('data-form').reset();
+        // Send data to Google Sheets
+        fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({ name, email }),
+        })
+        .then(response => response.text())
+        .then(() => {
+            alert('Data saved!');
+            document.getElementById('data-form').reset();
+            loadData(); // Refresh the table
+        })
+        .catch(err => console.error(err));
     } else {
         alert('Please fill in all fields.');
     }
 }
+
+function loadData() {
+    fetch(API_URL)
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('data-table').querySelector('tbody');
+            tableBody.innerHTML = ''; // Clear the table
+
+            data.slice(1).forEach(row => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td>`;
+                tableBody.appendChild(newRow);
+            });
+        })
+        .catch(err => console.error(err));
+}
+
+// Load data on page load
+window.onload = loadData;
