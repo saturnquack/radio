@@ -29,15 +29,15 @@
 </form>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbybiWLbSWmeFx0O-HC8f8uLRDC5CqmfAL7CG1aqqS4tvnTnWn2UnkqcVFJb3ZEeaBC0/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwwRvSRWkr8t9w55nqRW5i4E_8dKCUPKtP-WXwo_Hehk-_wt9OYt4aTxgeK28dPYak8/exec";
 
     function addData() {
         const freq = document.getElementById('freq').value;
         const name = document.getElementById('name').value;
         const mode = document.getElementById('mode').value;
-        const category = document.getElementById('category').value; //dropdown
+        const category = document.getElementById('category').value;
 
-        if (name && mode && category) {
+        if (name && mode && category && freq) {
             fetch(API_URL, {
                 method: "POST",
                 headers: {
