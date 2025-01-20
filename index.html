@@ -3,111 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRFD</title>
+    <title>Form</title>
 </head>
 <body>
-    <h1>Submit Data</h1>
-    
-    <!-- The Form to collect data -->
-    <form id="data-form">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required>
-        
-        <label for="mode">Mode:</label>
-        <input type="text" id="mode" required>
-        
-        <label for="category">Category:</label>
-        <select id="category" required>
-            <option value="" disabled selected>Select a category</option>
-            <option value="FM">FM</option>
-            <option value="AM">AM</option>
-            <option value="FM-N">FM-N</option>
-            <option value="P25">P25</option>
-            <option value="D-STAR">D-STAR</option>
-        </select>
 
-        <label for="freq">Frequency:</label>
-        <input type="text" id="freq" required>
-        
-        <button type="button" onclick="addData()">Submit</button>
-    </form>
+<form id="data-form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
 
-    <h2>Data Table</h2>
-    <div id="data-table">
-        <!-- Table for displaying the data -->
-    </div>
+    <label for="mode">Mode:</label>
+    <input type="text" id="mode" required>
 
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxAyXPokNLaPpJQc5l0bxnknp2UrvhnBMbuN_FOmD-Rpj2iG7d2dZI_lqsE9DpEfzla/exec";
+    <label for="category">Category:</label>
+    <select id="category" required>
+        <option value="" disabled selected>Select a category</option>
+        <option value="Category 1">Category 1</option>
+        <option value="Category 2">Category 2</option>
+        <option value="Category 3">Category 3</option>
+    </select>
 
-        // Function to add data to Google Sheets
-        function addData() {
-            const freq = document.getElementById('freq').value;
-            const name = document.getElementById('name').value;
-            const mode = document.getElementById('mode').value;
-            const category = document.getElementById('category').value;
+    <label for="freq">Frequency:</label>
+    <input type="text" id="freq" required>
 
-            if (name && mode && category && freq) {
-                fetch(API_URL + "?action=submitData&name=" + name + "&mode=" + mode + "&category=" + category + "&freq=" + freq, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                .then(response => response.text())
-                .then(result => {
-                    console.log(result); // Log the response for debugging
-                    if (result === "Success") {
-                        alert('Data sent!');
-                        document.getElementById('data-form').reset();
-                        loadData();
-                    } else {
-                        alert('Error: ' + result);
-                    }
-                })
-                .catch(err => {
-                    console.error('Fetch error:', err);
-                    alert('Failed to send data.');
-                });
-            } else {
-                alert('All fields are required.');
-            }
+    <button type="button" onclick="addData()">Submit</button>
+</form>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbybiWLbSWmeFx0O-HC8f8uLRDC5CqmfAL7CG1aqqS4tvnTnWn2UnkqcVFJb3ZEeaBC0/exec";
+
+    function addData() {
+        const freq = document.getElementById('freq').value;
+        const name = document.getElementById('name').value;
+        const mode = document.getElementById('mode').value;
+        const category = document.getElementById('category').value; //dropdown
+
+        if (name && mode && category) {
+            fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, mode, category, freq }),
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log(result); // Log the response for debugging
+                if (result === "Success") {
+                    alert('Sent!');
+                    document.getElementById('data-form').reset();
+                    loadData();
+                } else {
+                    alert('Error: ' + result);
+                }
+            })
+            .catch(err => {
+                console.error('Fetch error:', err);
+                alert('Failed to send data.');
+            });
+        } else {
+            alert('Please fill in all fields.');
         }
+    }
+</script>
 
-        // Function to load data from Google Sheets and display it in a table
-        function loadData() {
-            fetch(API_URL + "?action=getData")
-                .then(response => response.json())
-                .then(data => {
-                    const tableDiv = document.getElementById('data-table');
-                    tableDiv.innerHTML = ""; // Clear existing table content
-                    let table = document.createElement("table");
-                    let header = table.createTHead();
-                    let headerRow = header.insertRow();
-                    headerRow.insertCell(0).textContent = "Name";
-                    headerRow.insertCell(1).textContent = "Mode";
-                    headerRow.insertCell(2).textContent = "Category";
-                    headerRow.insertCell(3).textContent = "Frequency";
-
-                    let body = table.createTBody();
-                    data.forEach(row => {
-                        let tr = body.insertRow();
-                        row.forEach(cell => {
-                            let td = tr.insertCell();
-                            td.textContent = cell;
-                        });
-                    });
-
-                    tableDiv.appendChild(table);
-                })
-                .catch(err => {
-                    console.error('Error loading data:', err);
-                    alert('Failed to load data.');
-                });
-        }
-
-        // Call the loadData function to display data when the page loads
-        window.onload = loadData;
-    </script>
 </body>
 </html>
