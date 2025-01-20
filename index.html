@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form</title>
+    <title>Form Submission</title>
 </head>
 <body>
 
@@ -17,9 +17,11 @@
     <label for="category">Category:</label>
     <select id="category" required>
         <option value="" disabled selected>Select a category</option>
-        <option value="Category 1">Category 1</option>
-        <option value="Category 2">Category 2</option>
-        <option value="Category 3">Category 3</option>
+        <option value="FM">FM</option>
+        <option value="AM">AM</option>
+        <option value="FM-N">FM-N</option>
+        <option value="P25">P25</option>
+        <option value="D-STAR">D-STAR</option>
     </select>
 
     <label for="freq">Frequency:</label>
@@ -28,14 +30,30 @@
     <button type="button" onclick="addData()">Submit</button>
 </form>
 
+<!-- Table to display the data -->
+<h3>Submitted Data</h3>
+<table id="data-table" border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mode</th>
+            <th>Category</th>
+            <th>Frequency</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will be populated here -->
+    </tbody>
+</table>
+
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwwRvSRWkr8t9w55nqRW5i4E_8dKCUPKtP-WXwo_Hehk-_wt9OYt4aTxgeK28dPYak8/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbx1Gpb2ldJGTDHI-_n4RkYEmXvmpxUtAmc24E5_ByxpSugxZf_qqCzPXv5DBXrbvIfN/exec";
 
     function addData() {
         const freq = document.getElementById('freq').value;
         const name = document.getElementById('name').value;
         const mode = document.getElementById('mode').value;
-        const category = document.getElementById('category').value;
+        const category = document.getElementById('category').value; //dropdown
 
         if (name && mode && category && freq) {
             fetch(API_URL, {
@@ -43,7 +61,7 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name, mode, category, freq }),
+                body: JSON.stringify({ name, mode, category, freq }), // Send all fields
             })
             .then(response => response.text())
             .then(result => {
@@ -51,19 +69,41 @@
                 if (result === "Success") {
                     alert('Sent!');
                     document.getElementById('data-form').reset();
-                    loadData();
+                    loadData(); // Reload the data after successful submission
                 } else {
-                    alert('Error: ' + result);
+                    alert('Error: ' + result); // Display the error message from the script
                 }
             })
             .catch(err => {
                 console.error('Fetch error:', err);
-                alert('Failed to send data.');
+                alert('Failed to send data. Please check the console for details.');
             });
         } else {
             alert('Please fill in all fields.');
         }
     }
+
+    // Function to load data from the Google Sheet
+    function loadData() {
+        fetch(API_URL + "?action=getData")
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ""; // Clear existing table rows
+
+            data.forEach(row => {
+                const newRow = tableBody.insertRow();
+                newRow.insertCell(0).textContent = row.name;
+                newRow.insertCell(1).textContent = row.mode;
+                newRow.insertCell(2).textContent = row.category;
+                newRow.insertCell(3).textContent = row.freq;
+            });
+        })
+        .catch(err => console.error('Error loading data:', err));
+    }
+
+    // Load data when the page is loaded
+    window.onload = loadData;
 </script>
 
 </body>
